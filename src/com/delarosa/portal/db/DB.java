@@ -1,16 +1,17 @@
 package com.delarosa.portal.db;
 
-import java.sql.DriverManager;
-import java.util.Properties;
-import javax.sql.DataSource;
-import org.apache.commons.dbcp2.ConnectionFactory;
-import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
-import org.apache.commons.dbcp2.PoolableConnection;
-import org.apache.commons.dbcp2.PoolableConnectionFactory;
-import org.apache.commons.dbcp2.PoolingDataSource;
-import org.apache.commons.dbcp2.PoolingDriver;
-import org.apache.commons.pool2.ObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPool;
+import com.delarosa.portal.db.entity.User;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -18,81 +19,60 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  */
 public class DB {
 
-    public final static String POOL_NAME = "zkportal";
-    private static DataSource DATASOURCE;
+    public static final String TABLE_USER = "usuarios.json";
 
-    public static DataSource getDataSource() {
-        return DATASOURCE;
-    }
+    public static void insert(Object obj, Type type, String table) {
 
-    public static void start() {
         try {
-            //Logger.log(DB.class.getName(), "Loading underlying JDBC driver.");
-            Class.forName("org.apache.commons.dbcp2.PoolingDriver");
-            try {
-                Class.forName("org.postgresql.Driver");
-            } catch (Exception ex) {
-                // Logger.log(DB.class.getName(), ex, -1, -1);
+            String content = getTable(table);
+            List list = new Gson().fromJson(content, type);
+
+            if (list == null) {
+                list = new ArrayList();
             }
+            list.add(obj);
 
-            String url = "jdbc:postgresql://localhost:5432/zkportal";
-            Properties props = new Properties();
-            props.setProperty("user", "postgres");
-            props.setProperty("password", "postgres");
-            DATASOURCE = setupDataSource(url, props);
-        } catch (Exception ex) {
-            //Logger.log(DB.class.getName(), ex, -1, -1);
+            FileUtils.writeStringToFile(getFile(table), new GsonBuilder().setPrettyPrinting().create().toJson(list));
+        } catch (IOException ex) {
+            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static DataSource setupDataSource(String connectURI, Properties properties) {
-        //
-        // First, we'll create a ConnectionFactory that the
-        // pool will use to create Connections.
-        // We'll use the DriverManagerConnectionFactory,
-        // using the connect string passed in the command line
-        // arguments.
-        //
-        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI, properties);
+    public static File getFile(String table) {
+        // Carpeta padre
+        File parent = new File("tablas");
 
-        //
-        // Next we'll create the PoolableConnectionFactory, which wraps
-        // the "real" Connections created by the ConnectionFactory with
-        // the classes that implement the pooling functionality.
-        //
-        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
+        if (!parent.exists()) {
+            parent.mkdir();
+        }
 
-        //
-        // Now we'll need a ObjectPool that serves as the
-        // actual pool of connections.
-        //
-        // We'll use a GenericObjectPool instance, although
-        // any ObjectPool implementation will suffice.
-        //
-        ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
+        // Archivo de datos
+        File file = new File(parent, table);
 
-        // Set the factory's pool property to the owning pool
-        poolableConnectionFactory.setPool(connectionPool);
-
-        //
-        // Finally, we create the PoolingDriver itself,
-        // passing in the object pool we created.
-        //
-        PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(connectionPool);
-
-        return dataSource;
+        return file;
     }
 
-    private static void shutdownDriver() throws Exception {
-        PoolingDriver driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
-        driver.closePool(POOL_NAME);
-    }
-
-    public static void stop() {
+    public static String getTable(String table) {
+        String tableContent = StringUtils.EMPTY;
         try {
-            shutdownDriver();
-        } catch (Exception e) {
-            //Logger.log(DB.class.getName(), e, -1, -1);
+
+            File file = getFile(table);
+
+            if (file.exists()) {
+                // Leemos el contenido del archivo
+                tableContent = FileUtils.readFileToString(file);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        return tableContent;
     }
+
+    public static List<User> getUsersLis() {
+        String content = getTable(TABLE_USER);
+        List<User> list = new Gson().fromJson(content, User.LIST_TYPE);
+        return list == null ? new ArrayList<>() : list;
+    }
+
 }

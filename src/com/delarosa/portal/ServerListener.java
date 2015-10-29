@@ -1,6 +1,5 @@
 package com.delarosa.portal;
 
-import com.delarosa.portal.db.DB;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -12,12 +11,12 @@ public class ServerListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        DB.start();
+        // DB.start();
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        DB.stop();
+        // DB.stop();
     }
 
 }

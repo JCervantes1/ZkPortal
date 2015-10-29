@@ -1,6 +1,9 @@
 package com.delarosa.portal.db.entity;
 
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
  *
@@ -154,4 +157,7 @@ public class User implements org.zkoss.essentials.entity.User {
     public void setAlias(String alias) {
         this.alias = alias;
     }
+    
+    public static final Type LIST_TYPE = new TypeToken<ArrayList<User>>() {
+    }.getType();
 }
