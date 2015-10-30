@@ -48,6 +48,8 @@ public class Main extends Window {
             west.setTitle(" ");
             west.setCollapsible(true);
 
+            createMenu(west);
+
             EventListener<SwipeEvent> swipe = (SwipeEvent t) -> {
                 if (null != t.getSwipeDirection()) {
                     switch (t.getSwipeDirection()) {
@@ -112,106 +114,36 @@ public class Main extends Window {
         home.setWidth("100%");
         home.setSelected(true);
 
-        Navitem buscar = new Navitem();
-        buscar.setLabel("Búsqueda");
-        buscar.setId("b");
-        buscar.setIconSclass("z-icon-search");
-        buscar.setWidth("100%");
+        Navitem altaPacientes = new Navitem();
+        altaPacientes.setLabel("Alta de Pacientes");
+        altaPacientes.setId("a");
+        altaPacientes.setIconSclass("z-icon-user-plus");
+        altaPacientes.setWidth("100%");
 
-        Navitem citas = new Navitem();
-        citas.setLabel("Citas");
-        citas.setId("c");
-        citas.setIconSclass("z-icon-calendar");
-        citas.setWidth("100%");
-
-        Navitem recetas = new Navitem();
-        recetas.setLabel("Recetas");
-        recetas.setId("r");
-        recetas.setIconSclass("z-icon-pencil-square-o");
-        recetas.setWidth("100%");
-
-        Navitem alergias = new Navitem();
-        alergias.setLabel("Alergias");
-        alergias.setId("a");
-        alergias.setIconSclass("z-icon-exclamation");
-        alergias.setWidth("100%");
-
-        Navitem diagnosticos = new Navitem();
-        diagnosticos.setLabel("Diagnósticos");
-        diagnosticos.setId("d");
-        diagnosticos.setIconSclass("z-icon-check-circle-o");
-        diagnosticos.setWidth("100%");
-
-        Navitem intervenciones = new Navitem();
-        intervenciones.setLabel("Intervenciones");
-        intervenciones.setId("i");
-        intervenciones.setIconSclass("z-icon-hospital-o");
-        intervenciones.setWidth("100%");
-
-        Navitem medicamentos = new Navitem();
-        medicamentos.setLabel("Medicamentos");
-        medicamentos.setId("m");
-        medicamentos.setIconSclass("z-icon-medkit");
-        medicamentos.setWidth("100%");
-
-        Navitem signos = new Navitem();
-        signos.setLabel("Signos");
-        signos.setId("s");
-        signos.setIconSclass("z-icon-heartbeat");
-        signos.setWidth("100%");
-
-        Navitem historia = new Navitem();
-        historia.setLabel("Historia");
-        historia.setId("h");
-        historia.setIconSclass("z-icon-book");
-        historia.setWidth("100%");
+        Navitem busquedaPacientes = new Navitem();
+        busquedaPacientes.setLabel("Búsqueda de Pacientes");
+        busquedaPacientes.setId("b");
+        busquedaPacientes.setIconSclass("z-icon-refresh");
+        busquedaPacientes.setWidth("100%");
 
         navbar.appendChild(home);
-        navbar.appendChild(buscar);
-        navbar.appendChild(citas);
-        navbar.appendChild(recetas);
-        navbar.appendChild(alergias);
-        navbar.appendChild(diagnosticos);
-        navbar.appendChild(intervenciones);
-        navbar.appendChild(medicamentos);
-        navbar.appendChild(signos);
-        navbar.appendChild(historia);
+        navbar.appendChild(altaPacientes);
+        navbar.appendChild(busquedaPacientes);
 
         EventListener<SelectEvent> eventListener = (SelectEvent t) -> {
             Navitem navitem = (Navitem) t.getSelectedItems().iterator().next();
             String id = navitem.getId();
-//            switch (id) {
-//                case "k":
-//                    open(new Home());
-//                    break;
-//                case "b":
-//                    open(new Busqueda());
-//                    break;
-//                case "c":
-//                    open(new Eventos());
-//                    break;
-//                case "r":
-//                    open(new Recetas());
-//                    break;
-//                case "a":
-//                    open(new Alergias());
-//                    break;
-//                case "d":
-//                    open(new Diagnosticos());
-//                    break;
-//                case "i":
-//                    open(new Intervenciones());
-//                    break;
-//                case "m":
-//                    open(new Medicamentos());
-//                    break;
-//                case "s":
-//                    open(new Signos());
-//                    break;
-//                case "h":
-//                    open(new Historia());
-//                    break;
-//            }
+            switch (id) {
+                case "k":
+                    open(new Home());
+                    break;
+                case "a":
+                    open(new AltaPacientes());
+                    break;
+                case "b":
+                    open(new BusquedaPacientes());
+                    break;
+            }
         };
 
         navbar.addEventListener(Events.ON_SELECT, eventListener);

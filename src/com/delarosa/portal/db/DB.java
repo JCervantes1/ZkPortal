@@ -1,5 +1,6 @@
 package com.delarosa.portal.db;
 
+import com.delarosa.portal.db.entity.Patient;
 import com.delarosa.portal.db.entity.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 public class DB {
 
     public static final String TABLE_USER = "usuarios.json";
+    public static final String TABLE_PATIENT = "pacientes.json";
 
     public static void insert(Object obj, Type type, String table) {
 
@@ -73,6 +75,31 @@ public class DB {
         String content = getTable(TABLE_USER);
         List<User> list = new Gson().fromJson(content, User.LIST_TYPE);
         return list == null ? new ArrayList<>() : list;
+    }
+
+    public static List<Patient> getPatientLis(String text) {
+        String content = getTable(TABLE_PATIENT);
+        List<Patient> list = new Gson().fromJson(content, Patient.LIST_TYPE);
+
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        List<Patient> tmp = new ArrayList<>();
+
+        if (StringUtils.isBlank(text)) {
+            tmp.addAll(list);
+        } else {
+            for (Patient patient : list) {
+                if (StringUtils.containsIgnoreCase(patient.getNombre(), text) //
+                        || StringUtils.containsIgnoreCase(patient.getApellido1(), text)//
+                        || StringUtils.containsIgnoreCase(patient.getApellido2(), text)) {
+                    tmp.add(patient);
+                }
+            }
+        }
+
+        return tmp;
     }
 
 }
