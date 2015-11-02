@@ -126,9 +126,16 @@ public class Main extends Window {
         busquedaPacientes.setIconSclass("z-icon-refresh");
         busquedaPacientes.setWidth("100%");
 
+        Navitem verCitas = new Navitem();
+        verCitas.setLabel("Ver Citas");
+        verCitas.setId("c");
+        verCitas.setIconSclass("z-icon-calendar-o");
+        verCitas.setWidth("100%");
+
         navbar.appendChild(home);
         navbar.appendChild(altaPacientes);
         navbar.appendChild(busquedaPacientes);
+        navbar.appendChild(verCitas);
 
         EventListener<SelectEvent> eventListener = (SelectEvent t) -> {
             Navitem navitem = (Navitem) t.getSelectedItems().iterator().next();
@@ -142,6 +149,9 @@ public class Main extends Window {
                     break;
                 case "b":
                     open(new BusquedaPacientes());
+                    break;
+                case "c":
+                    open(new VerCitas());
                     break;
             }
         };

@@ -9,6 +9,7 @@ import java.util.ArrayList;
  * @author jonathan
  */
 public class Patient {
+
     private String id;
     private String nombre;
     private String apellido1;
@@ -45,7 +46,13 @@ public class Patient {
     public void setApellido2(String apellido2) {
         this.apellido2 = apellido2;
     }
-    
+
     public static final Type LIST_TYPE = new TypeToken<ArrayList<Patient>>() {
     }.getType();
+
+    @Override
+    public String toString() {
+        return getNombre() + " " + getApellido1() + " " + getApellido2();
+    }
+
 }

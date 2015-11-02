@@ -1,5 +1,6 @@
 package com.delarosa.portal.db;
 
+import com.delarosa.portal.db.entity.Cita;
 import com.delarosa.portal.db.entity.Patient;
 import com.delarosa.portal.db.entity.User;
 import com.google.gson.Gson;
@@ -8,11 +9,13 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.MutableDateTime;
 
 /**
  *
@@ -22,6 +25,7 @@ public class DB {
 
     public static final String TABLE_USER = "usuarios.json";
     public static final String TABLE_PATIENT = "pacientes.json";
+    public static final String TABLE_CITA = "citas.json";
 
     public static void insert(Object obj, Type type, String table) {
 
@@ -77,6 +81,26 @@ public class DB {
         return list == null ? new ArrayList<>() : list;
     }
 
+    public static Patient getPatient(String id) {
+        String content = getTable(TABLE_PATIENT);
+        List<Patient> list = new Gson().fromJson(content, Patient.LIST_TYPE);
+
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        Patient patient = null;
+
+        for (Patient p : list) {
+            if (id.equals(p.getId())) {
+                patient = p;
+                break;
+            }
+        }
+
+        return patient;
+    }
+
     public static List<Patient> getPatientLis(String text) {
         String content = getTable(TABLE_PATIENT);
         List<Patient> list = new Gson().fromJson(content, Patient.LIST_TYPE);
@@ -95,6 +119,30 @@ public class DB {
                         || StringUtils.containsIgnoreCase(patient.getApellido1(), text)//
                         || StringUtils.containsIgnoreCase(patient.getApellido2(), text)) {
                     tmp.add(patient);
+                }
+            }
+        }
+
+        return tmp;
+    }
+
+    public static List<Cita> getCitasLis(Date date1, Date date2) {
+        String content = getTable(TABLE_CITA);
+        List<Cita> list = new Gson().fromJson(content, Cita.LIST_TYPE);
+
+        List<Cita> tmp = new ArrayList<>();
+
+        if (list != null && date1 != null && date2 != null) {
+            for (Cita cita : list) {
+                MutableDateTime f1 = new MutableDateTime(date1);
+                f1.setSecondOfDay(0);
+                
+                MutableDateTime f2 = new MutableDateTime(date2);
+                f2.setHourOfDay(23);
+                f2.setMinuteOfHour(59);
+                
+                if (cita.getFecha().after(f1.toDate()) && cita.getFecha().before(f2.toDate())) {
+                    tmp.add(cita);
                 }
             }
         }

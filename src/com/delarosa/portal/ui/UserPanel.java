@@ -2,6 +2,7 @@ package com.delarosa.portal.ui;
 
 import com.delarosa.portal.authentication.MyAuthenticationService;
 import com.delarosa.portal.utils.CookieController;
+import com.delarosa.portal.zk.Notification;
 import org.zkoss.essentials.services.AuthenticationService;
 import org.zkoss.essentials.services.UserCredential;
 import org.zkoss.zk.ui.Executions;
@@ -70,7 +71,18 @@ public class UserPanel extends Div {
         }
 
         config.appendChild(menuStyle);
-
+        
+        Menuitem cancelUser = new Menuitem("Desactivar Usuario");
+        cancelUser.setIconSclass("z-icon-user-times");
+        
+        menupopup.appendChild(config);
+        menupopup.appendChild(new Menuseparator());
+        menupopup.appendChild(cancelUser);
+        
+        cancelUser.addEventListener(Events.ON_CLICK, (Event t) -> {
+            Notification.showInfo("Desactivando usuario....");
+        });
+        
         Menuitem logout = new Menuitem("Salir");
         logout.setIconSclass("z-icon-sign-out");
 
@@ -81,7 +93,7 @@ public class UserPanel extends Div {
         logout.addEventListener(Events.ON_CLICK, (Event t) -> {
             logout();
         });
-
+        
         userMenu.appendChild(menupopup);
 
         menubar.appendChild(userMenu);
