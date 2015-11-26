@@ -3,6 +3,7 @@ package com.delarosa.portal.db.entity;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -14,6 +15,24 @@ public class Patient {
     private String nombre;
     private String apellido1;
     private String apellido2;
+    private String sexo;
+    private Date fechaNac;
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public Date getFechaNac() {
+        return fechaNac;
+    }
+
+    public void setFechaNac(Date fechaNac) {
+        this.fechaNac = fechaNac;
+    }
 
     public String getId() {
         return id;

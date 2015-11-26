@@ -151,7 +151,7 @@ public class Main extends Window {
                     open(new BusquedaPacientes());
                     break;
                 case "c":
-                    open(new VerCitas());
+                    open(new BusquedaCitas());
                     break;
             }
         };

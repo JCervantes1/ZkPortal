@@ -5,7 +5,7 @@ import com.delarosa.portal.db.entity.Patient;
 import com.delarosa.portal.zk.GridLayout;
 import com.delarosa.portal.zk.Listhead;
 import com.delarosa.portal.zk.SearchWindow;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
@@ -53,19 +53,33 @@ public class BusquedaPacientes extends SearchWindow implements ListitemRenderer<
         listhead.newHeader("Nombre").setHflex("1");
         listhead.newHeader("Apellido Paterno").setHflex("min");
         listhead.newHeader("Apellido Materno").setHflex("min");
+        listhead.newHeader("Fecha Nacimiento").setHflex("min");
+        listhead.newHeader("Sexo").setHflex("min");
         return listhead;
     }
 
     @Override
     public Collection<?> getResults() {
-        return DB.getPatientLis(text.getText());
+        return DB.getPatientList(text.getText());
     }
 
     @Override
-    public void render(Listitem lstm, Patient t, int i) throws Exception {
-        lstm.appendChild(new Listcell(t.getNombre()));
-        lstm.appendChild(new Listcell(t.getApellido1()));
-        lstm.appendChild(new Listcell(t.getApellido2()));
+    public void render(Listitem lstm, final Patient patient, int i) throws Exception {
+        lstm.appendChild(new Listcell(patient.getNombre()));
+        lstm.appendChild(new Listcell(patient.getApellido1()));
+        lstm.appendChild(new Listcell(patient.getApellido2()));
+        lstm.appendChild(new Listcell(new SimpleDateFormat("dd/MM/yyyy").format(patient.getFechaNac())));
+        lstm.appendChild(new Listcell(patient.getSexo()));
+        
+        lstm.addEventListener(Events.ON_CLICK, (Event t) -> {
+            AltaPacientes altaPacientes = new AltaPacientes(patient);
+            altaPacientes.setClosable(true);
+            altaPacientes.setTitle("Edición de Paciente");
+            altaPacientes.setWidth("800px");
+            altaPacientes.setHeight("500px");
+            altaPacientes.setPage(getPage());
+            altaPacientes.doModal();
+        });
     }
 
 }

@@ -7,14 +7,17 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Borderlayout;
 import org.zkoss.zul.Cell;
 import org.zkoss.zul.Center;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Iframe;
 import org.zkoss.zul.Label;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.North;
 import org.zkoss.zul.SimpleConstraint;
@@ -139,5 +142,47 @@ public class ZKUtils {
 
     public static void notNull(InputElement inputElement) {
         NULL_CONSTRAINT.validate(inputElement, inputElement.getText());
+    }
+
+    public static void notNull(Listbox listbox) {
+        if (listbox.getSelectedIndex() == -1) {
+            NULL_CONSTRAINT.validate(listbox, null);
+        }
+    }
+
+    public static void notNull(Combobox combobox) {
+        if (combobox.getSelectedIndex() == -1) {
+            NULL_CONSTRAINT.validate(combobox, null);
+        }
+    }
+
+    public static void setSelectedValue(Combobox combobox, Object value) {
+        if (value == null) {
+            combobox.setSelectedIndex(-1);
+        } else {
+            for (Component child : combobox.getChildren()) {
+                Comboitem item = (Comboitem) child;
+
+                if (value.equals(item.getValue())) {
+                    combobox.setSelectedItem(item);
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void setSelectedValue(Listbox listbox, Object value) {
+        if (value == null) {
+            listbox.setSelectedIndex(-1);
+        } else {
+            for (Component child : listbox.getChildren()) {
+                Listitem item = (Listitem) child;
+
+                if (value.equals(item.getValue())) {
+                    listbox.setSelectedItem(item);
+                    break;
+                }
+            }
+        }
     }
 }

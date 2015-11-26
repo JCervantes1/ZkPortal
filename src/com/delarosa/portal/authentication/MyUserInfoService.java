@@ -15,7 +15,7 @@ public class MyUserInfoService implements UserInfoService {
     public User findUser(String account) {
         User user = null;
 
-        List<User> list = DB.getUsersLis();
+        List<User> list = DB.getUsersList();
 
         if (list.isEmpty()) {
             user = new User();

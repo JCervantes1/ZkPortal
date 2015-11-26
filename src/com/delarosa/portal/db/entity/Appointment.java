@@ -9,11 +9,19 @@ import java.util.ArrayList;
  *
  * @author jona
  */
-public class Cita {
-
+public class Appointment {
+    private String id;
     private Timestamp fecha;
     private String paciente;
     private String motivo;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getPaciente() {
         return paciente;
@@ -39,7 +47,7 @@ public class Cita {
         this.fecha = fecha;
     }
     
-    public static final Type LIST_TYPE = new TypeToken<ArrayList<Cita>>() {
+    public static final Type LIST_TYPE = new TypeToken<ArrayList<Appointment>>() {
     }.getType();
 
 }

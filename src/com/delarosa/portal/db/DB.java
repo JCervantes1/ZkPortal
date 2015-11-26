@@ -1,6 +1,6 @@
 package com.delarosa.portal.db;
 
-import com.delarosa.portal.db.entity.Cita;
+import com.delarosa.portal.db.entity.Appointment;
 import com.delarosa.portal.db.entity.Patient;
 import com.delarosa.portal.db.entity.User;
 import com.google.gson.Gson;
@@ -25,7 +25,43 @@ public class DB {
 
     public static final String TABLE_USER = "usuarios.json";
     public static final String TABLE_PATIENT = "pacientes.json";
-    public static final String TABLE_CITA = "citas.json";
+    public static final String TABLE_APPOINTMENT = "citas.json";
+
+    public static void updatePatient(Patient patient) {
+        List<Patient> list = getPatientList(null);
+        for (int i = 0; i < list.size(); i++) {
+            Patient tmp = list.get(i);
+
+            if (patient.getId().equals(tmp.getId())) {
+                list.set(i, patient);
+                break;
+            }
+        }
+
+        try {
+            FileUtils.writeStringToFile(getFile(TABLE_PATIENT), new GsonBuilder().setPrettyPrinting().create().toJson(list));
+        } catch (IOException ex) {
+            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void updateAppointment(Appointment appointment) {
+        List<Appointment> list = getAppointmentList(null, null);
+        for (int i = 0; i < list.size(); i++) {
+            Appointment tmp = list.get(i);
+
+            if (appointment.getId().equals(tmp.getId())) {
+                list.set(i, appointment);
+                break;
+            }
+        }
+
+        try {
+            FileUtils.writeStringToFile(getFile(TABLE_APPOINTMENT), new GsonBuilder().setPrettyPrinting().create().toJson(list));
+        } catch (IOException ex) {
+            Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public static void insert(Object obj, Type type, String table) {
 
@@ -75,7 +111,20 @@ public class DB {
         return tableContent;
     }
 
-    public static List<User> getUsersLis() {
+    public static User getUser(String alias) {
+        User user = null;
+
+        for (User tmp : getUsersList()) {
+            if (alias.equals(tmp.getAlias())) {
+                user = tmp;
+                break;
+            }
+        }
+
+        return user;
+    }
+
+    public static List<User> getUsersList() {
         String content = getTable(TABLE_USER);
         List<User> list = new Gson().fromJson(content, User.LIST_TYPE);
         return list == null ? new ArrayList<>() : list;
@@ -101,7 +150,7 @@ public class DB {
         return patient;
     }
 
-    public static List<Patient> getPatientLis(String text) {
+    public static List<Patient> getPatientList(String text) {
         String content = getTable(TABLE_PATIENT);
         List<Patient> list = new Gson().fromJson(content, Patient.LIST_TYPE);
 
@@ -126,25 +175,27 @@ public class DB {
         return tmp;
     }
 
-    public static List<Cita> getCitasLis(Date date1, Date date2) {
-        String content = getTable(TABLE_CITA);
-        List<Cita> list = new Gson().fromJson(content, Cita.LIST_TYPE);
+    public static List<Appointment> getAppointmentList(Date date1, Date date2) {
+        String content = getTable(TABLE_APPOINTMENT);
+        List<Appointment> list = new Gson().fromJson(content, Appointment.LIST_TYPE);
 
-        List<Cita> tmp = new ArrayList<>();
+        List<Appointment> tmp = new ArrayList<>();
 
         if (list != null && date1 != null && date2 != null) {
-            for (Cita cita : list) {
+            for (Appointment cita : list) {
                 MutableDateTime f1 = new MutableDateTime(date1);
                 f1.setSecondOfDay(0);
-                
+
                 MutableDateTime f2 = new MutableDateTime(date2);
                 f2.setHourOfDay(23);
                 f2.setMinuteOfHour(59);
-                
+
                 if (cita.getFecha().after(f1.toDate()) && cita.getFecha().before(f2.toDate())) {
                     tmp.add(cita);
                 }
             }
+        } else if (list != null) {
+            tmp.addAll(list);
         }
 
         return tmp;

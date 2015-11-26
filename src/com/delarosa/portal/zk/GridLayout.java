@@ -228,7 +228,7 @@ public class GridLayout extends Grid {
             component = new Space();
         } else if (component instanceof Datebox) {
             Datebox datebox = (Datebox) component;
-            datebox.setCols(10);
+            datebox.setCols(20);
             datebox.setTooltiptext(toolTip);
         } else if (component instanceof Timebox) {
             Timebox datebox = (Timebox) component;

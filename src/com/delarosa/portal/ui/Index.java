@@ -27,7 +27,7 @@ public class Index extends Window {
     private final Textbox user = new Textbox();
     private final Textbox pass = new Textbox();
     private final Button ok = new Button("LOGIN");
-    private final Button newUser = new Button("New USer");
+    private final Toolbarbutton newUser = new Toolbarbutton("Nuevo Usuario");
     private final Toolbarbutton recover = new Toolbarbutton("Olvidaste tu contraseña?");
     private final AuthenticationService authService = new MyAuthenticationService();
 
@@ -55,12 +55,12 @@ public class Index extends Window {
         addEventListener(Events.ON_OK, (Event t) -> {
             login();
         });
-        
+
         newUser.setWidth("100%");
         newUser.setIconSclass("z-icon-user-plus");
-        
+
         newUser.addEventListener(Events.ON_CLICK, (Event t) -> {
-            login();
+            newUser();
         });
 
         addEventListener(Events.ON_OK, (Event t) -> {
@@ -98,6 +98,13 @@ public class Index extends Window {
         }
 
         Executions.getCurrent().sendRedirect("/main.zul");
+    }
+
+    private void newUser() {
+        NuevoUsuario newUser = new NuevoUsuario();
+        newUser.setPage(getPage());
+
+        newUser.doModal();
     }
 
 }
