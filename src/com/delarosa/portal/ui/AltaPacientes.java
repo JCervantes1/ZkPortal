@@ -25,6 +25,7 @@ public class AltaPacientes extends Window {
     private final Textbox apellido2;
     private final Listbox sexo;
     private final Datebox fechaNac;
+    private final Textbox direccion;
     private String id;
 
     public AltaPacientes() {
@@ -39,6 +40,7 @@ public class AltaPacientes extends Window {
         apellido2 = new Textbox();
         sexo = new Listbox();
         fechaNac = new Datebox();
+        direccion = new Textbox();
 
         sexo.setMold("select");
         sexo.appendItem("Femenino", "Femenino");
@@ -57,6 +59,7 @@ public class AltaPacientes extends Window {
             ZKUtils.notNull(apellido2);
             ZKUtils.notNull(fechaNac);
             ZKUtils.notNull(sexo);
+            ZKUtils.notNull(direccion);
 
             Patient p = new Patient();
             p.setNombre(nombre.getText());
@@ -64,6 +67,7 @@ public class AltaPacientes extends Window {
             p.setApellido2(apellido2.getText());
             p.setFechaNac(fechaNac.getValue());
             p.setSexo(sexo.getSelectedItem().getValue());
+            p.setDireccion(direccion.getText());
 
             if (StringUtils.isNoneBlank(id)) {
                 p.setId(id);
@@ -84,6 +88,7 @@ public class AltaPacientes extends Window {
 
         gridLayout.addRow("Nombre", nombre, "Apellido Paterno", apellido1, "Apellido Materno", apellido2);
         gridLayout.addRow("Fecha Nacimiento", fechaNac, "Sexo", sexo, null, null);
+        gridLayout.addRow("Dirección", direccion, null, null, null, null);
     }
 
     private void load(Patient patient) {
@@ -92,6 +97,7 @@ public class AltaPacientes extends Window {
         apellido2.setText(patient.getApellido2());
         fechaNac.setValue(patient.getFechaNac());
         ZKUtils.setSelectedValue(sexo, patient.getSexo());
+        direccion.setText(patient.getDireccion());
 
         id = patient.getId();
     }

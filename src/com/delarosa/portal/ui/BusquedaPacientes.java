@@ -55,6 +55,7 @@ public class BusquedaPacientes extends SearchWindow implements ListitemRenderer<
         listhead.newHeader("Apellido Materno").setHflex("min");
         listhead.newHeader("Fecha Nacimiento").setHflex("min");
         listhead.newHeader("Sexo").setHflex("min");
+        listhead.newHeader("Dirección").setHflex("min");
         return listhead;
     }
 
@@ -70,6 +71,7 @@ public class BusquedaPacientes extends SearchWindow implements ListitemRenderer<
         lstm.appendChild(new Listcell(patient.getApellido2()));
         lstm.appendChild(new Listcell(new SimpleDateFormat("dd/MM/yyyy").format(patient.getFechaNac())));
         lstm.appendChild(new Listcell(patient.getSexo()));
+        lstm.appendChild(new Listcell(patient.getDireccion()));
         
         lstm.addEventListener(Events.ON_CLICK, (Event t) -> {
             AltaPacientes altaPacientes = new AltaPacientes(patient);

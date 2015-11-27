@@ -17,6 +17,15 @@ public class Patient {
     private String apellido2;
     private String sexo;
     private Date fechaNac;
+    private String direccion;
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
 
     public String getSexo() {
         return sexo;
